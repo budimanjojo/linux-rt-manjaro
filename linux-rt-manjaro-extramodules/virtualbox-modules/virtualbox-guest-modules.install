@@ -1,5 +1,4 @@
-EXTRAMODULES='extramodules-4.4-rt-MANJARO'
-
+EXTRAMODULES='extramodules-4.4-rt-lts-MANJARO'
 
 post_install() {
 cat << EOF

@@ -2,24 +2,24 @@
 # Sergej Pupykin <pupykin.s+arch@gmail.com>
 # Krzysztof Raczkowski <raczkow@gmail.com>
 
-# Maintainer: Guinux <nuxgui@gmail.com>
-# Co-Maintainer: Clittle <philm@manjarolinux.org>
+# Maintainer: Philip Müller <philm@manjaro.org>
+# Maintainer: Bernhard Landauer <oberon@manjaro.org>
 
-pkgname=linux-rt-manjaro-open-vm-tools-modules
+pkgname=linux-rt-lts-manjaro-open-vm-tools-modules
 _pkgname=open-vm-tools-modules
-groups=('linux-rt-manjaro-extramodules')
+groups=('linux-rt-lts-manjaro-extramodules')
 epoch=2
 pkgver=2013.09.16
 _pkgsubver=1328054
-pkgrel=17
+pkgrel=2
 pkgdesc="kernel modules for the open source implementation of VMware Tools"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://open-vm-tools.sourceforge.net/"
 license=('GPL')
-makedepends=('libdnet' 'procps' 'icu' 'uriparser' 'linux-rt-manjaro-headers')
-depends=("linux-rt-manjaro")
+makedepends=('libdnet' 'procps' 'icu' 'uriparser' 'linux-rt-lts-manjaro-headers')
+depends=("linux-rt-lts-manjaro")
 provides=("$_pkgname=$pkgver")
-groups=('linux-rt-manjaro-extramodules')
+groups=('linux-rt-lts-manjaro-extramodules')
 install=$_pkgname.install
 options=('!strip')
 source=("http://downloads.sourceforge.net/open-vm-tools/open-vm-tools-$pkgver-${_pkgsubver}.tar.gz"
@@ -35,7 +35,7 @@ sha256sums=('470a6ea3ce14c2c5ea6b7bc59745eccbacc8d88a3f343e712312786435975d13'
 )
 
 build() {
-  _extramodules=extramodules-4.4-rt-MANJARO
+  _extramodules=extramodules-4.4-rt-lts-MANJARO
   _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
   cd "$srcdir/open-vm-tools-${pkgver}-${_pkgsubver}"
   patch -p1 -i "$srcdir/3.10-vmsync.patch"
@@ -55,9 +55,9 @@ build() {
 }
 
 package() {
-  _extramodules=extramodules-4.4-rt-MANJARO
+  _extramodules=extramodules-4.4-rt-lts-MANJARO
   _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
-  depends=("linux-rt-manjaro")
+  depends=("linux-rt-lts-manjaro")
 
   cd "$srcdir/open-vm-tools-${pkgver}-${_pkgsubver}"
   mkdir -p $pkgdir/usr/lib/modules/${_extramodules}/

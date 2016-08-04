@@ -1,20 +1,19 @@
 # Maintainer: Philip Müller <philm[at]manjaro[dog]org>
-# Maintainer: Roland Singer <roland[at]manjaro[dog]org>
+# Maintainer: Bernhard Landauer <oberon@manjaro.org>
 
-
-_linuxprefix=linux-rt-manjaro
-_extramodules=extramodules-4.4-rt-MANJARO
+_linuxprefix=linux-rt-lts-manjaro
+_extramodules=extramodules-4.4-rt-lts-MANJARO
 pkgname=$_linuxprefix-catalyst
 _pkgname=catalyst
 pkgver=15.201.1151
-pkgrel=17
+pkgrel=2
 epoch=1
 _pkgver=15.201.1151
 _tarball=15.9-linux-installer-15.201.1151
 provides=("$_pkgname=$_pkgver")
 groups=("$_linuxprefix-extramodules")
 pkgdesc="AMD/ATI Catalyst drivers for linux. fglrx kernel module only."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.amd.com"
 license=('custom')
 depends=("$_linuxprefix" "catalyst-utils=${epoch}:${pkgver}")
@@ -22,20 +21,22 @@ makedepends=("$_linuxprefix-headers" "gcc49")
 conflicts=('catalyst-legacy' "$_linuxprefix-catalyst-legacy")
 install=catalyst.install
 
+url_ref="http://support.amd.com/en-us/download/desktop?os=Linux+x86"
+DLAGENTS="http::/usr/bin/curl --referer ${url_ref} -o %o %u"
+
 source=(http://www2.ati.com/drivers/linux/amd-catalyst-${_tarball}-x86.x86_64.zip
-        #https://launchpad.net/ubuntu/+archive/primary/+files/fglrx-installer_${_tarball}.orig.tar.gz
         ati_make.sh
         lano1106_fglrx_intel_iommu.patch
         lano1106_kcl_agp_13_4.patch
         makefile_compat.patch
         kolasa_fglrx_312.patch
-	cold-fglrx-3.14-current_euid.patch
-	manjaro_fglrx_40.patch
+        cold-fglrx-3.14-current_euid.patch
+        manjaro_fglrx_40.patch
         kolasa_fglrx_4.1.patch
         manjaro_fglrx_4.2.patch
         manjaro_fglrx_4.3.patch
         gentoo_fglrx_4.3_mtrr.patch
-	LICENSE.TXT)
+        LICENSE.TXT)
 
 sha256sums=('bf3e6e7d5c51db3d075410a3f116f865b82823debc1d66698d187249feec6a91'
             '8b2adf804c2691d075bb75fbb626be59f3769a2f4f1418554fc3de91a65451ab'
@@ -52,15 +53,7 @@ sha256sums=('bf3e6e7d5c51db3d075410a3f116f865b82823debc1d66698d187249feec6a91'
             '4f7530540f6e1ea032746e94bd164160abdf93c15509bfb8bdbecd23bcea5c47')
 
 prepare() {
-	#cd ${srcdir}/fglrx-$_pkgver
 	/bin/sh ./AMD-Catalyst-15.9-Linux-installer-${_pkgver}-x86.x86_64.run --extract archive_files
-	#/bin/sh ./amd-catalyst-${_pkgver}-linux-x86.x86_64.run --extract archive_files
-
-	# move files
-	#mkdir common
-	#mv etc lib usr common
-	#mkdir -p fglrx-$_pkgver/archive_files
-	#mv arch common xpic xpic_64a LICENSE.TXT fglrx-$_pkgver/archive_files
 	mkdir -p fglrx-$_pkgver
 	mv archive_files fglrx-$_pkgver
 }
@@ -73,14 +66,8 @@ build() {
 	. ati_make.sh
 	_ati_check
 
-	if [ "${CARCH}" = "x86_64" ]; then
-		BUILDARCH=x86_64
-		_archdir=x86_64
-	fi
-	if [ "${CARCH}" = "i686" ]; then
-		BUILDARCH=i386
-		_archdir=x86
-	fi
+	BUILDARCH=x86_64
+	_archdir=x86_64
 
 	cd "${srcdir}/fglrx-$_pkgver/archive_files"
 
@@ -89,15 +76,15 @@ build() {
 	patch -Np1 -i ${srcdir}/makefile_compat.patch
 	patch -Np1 -i ${srcdir}/lano1106_fglrx_intel_iommu.patch
 	patch -Np1 -i ${srcdir}/lano1106_kcl_agp_13_4.patch
-        patch -Np1 -i ${srcdir}/cold-fglrx-3.14-current_euid.patch
+    patch -Np1 -i ${srcdir}/cold-fglrx-3.14-current_euid.patch
 
 	cd "${srcdir}/fglrx-$_pkgver/archive_files/common/lib/modules/fglrx/build_mod"
-        patch -Np1 -i ${srcdir}/kolasa_fglrx_312.patch
-        patch -Np5 -i ${srcdir}/manjaro_fglrx_40.patch
-        patch -Np1 -i ${srcdir}/kolasa_fglrx_4.1.patch
-        patch -Np1 -i ${srcdir}/manjaro_fglrx_4.2.patch
-        patch -Np1 -i ${srcdir}/manjaro_fglrx_4.3.patch
-        patch -Np6 -i ${srcdir}/gentoo_fglrx_4.3_mtrr.patch
+    patch -Np1 -i ${srcdir}/kolasa_fglrx_312.patch
+    patch -Np5 -i ${srcdir}/manjaro_fglrx_40.patch
+    patch -Np1 -i ${srcdir}/kolasa_fglrx_4.1.patch
+    patch -Np1 -i ${srcdir}/manjaro_fglrx_4.2.patch
+    patch -Np1 -i ${srcdir}/manjaro_fglrx_4.3.patch
+    patch -Np6 -i ${srcdir}/gentoo_fglrx_4.3_mtrr.patch
 
 	## fix linux44 build
 	sed -i -e s'|XSTATE_FP|XFEATURE_MASK_FP|g' firegl_public.c

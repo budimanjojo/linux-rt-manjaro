@@ -3,21 +3,23 @@
 # SpepS <dreamspepser at yahoo dot it>
 # Tobias Powalowski <tpowa@archlinux.org>
 
-# Maintainer: Guinux <nuxgui@gmail.com>
-# Co-Maintainer: Clittle <philm@manjarolinux.org>
+# Maintainer: Philip Müller <philm[at]manjaro[dot]org
+# Maintainer: Bernhard Landauer <oberon@manjaro.org>
 
 _pkgname=ndiswrapper
 pkgbase=ndiswrapper
-pkgname=('linux-rt-manjaro-ndiswrapper' 'ndiswrapper-utils')
-groups=('linux-rt-manjaro-extramodules')
+pkgname=('linux-rt-lts-manjaro-ndiswrapper'
+	#'ndiswrapper-utils'
+	)
+groups=('linux-rt-lts-manjaro-extramodules')
 pkgver=1.59
-pkgrel=17
+pkgrel=2
 pkgdesc="Module for NDIS (Windows Network Drivers) drivers supplied by vendors."
 license=('GPL')
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://ndiswrapper.sourceforge.net"
-depends=('linux-rt-manjaro' 'wireless_tools' 'perl' "$_pkgname-utils")
-makedepends=('linux-rt-manjaro-headers')
+depends=('linux-rt-lts-manjaro' 'wireless_tools' 'perl' "$_pkgname-utils")
+makedepends=('linux-rt-lts-manjaro-headers')
 source=("http://downloads.sourceforge.net/sourceforge/$_pkgname/$_pkgname-$pkgver.tar.gz"
         "kernel-3.14.patch"
         "kernel-4.0.patch"
@@ -36,7 +38,7 @@ prepare() {
 }
 
 build() {
-  _extramodules=extramodules-4.4-rt-MANJARO
+  _extramodules=extramodules-4.4-rt-lts-MANJARO
   _kver="$(cat /usr/lib/modules/${_extramodules}/version)"
   cd "$srcdir/$_pkgname-$pkgver"
 
@@ -49,11 +51,11 @@ build() {
   make KVERS=$_kver
 }
 
-package_linux-rt-manjaro-ndiswrapper() {
-  _extramodules=extramodules-4.4-rt-MANJARO
+package_linux-rt-lts-manjaro-ndiswrapper() {
+  _extramodules=extramodules-4.4-rt-lts-MANJARO
   _kver="$(cat /usr/lib/modules/${_extramodules}/version)"
   provides=("$_pkgname=$pkgver")
-  groups=('linux-rt-manjaro-extramodules')
+  groups=('linux-rt-lts-manjaro-extramodules')
   install=ndiswrapper.install
   cd "$srcdir/$_pkgname-$pkgver"
 
@@ -73,11 +75,9 @@ package_linux-rt-manjaro-ndiswrapper() {
 
 package_ndiswrapper-utils() {
   pkgdesc="Utils for NDIS (Windows Network Drivers) drivers supplied by vendors."
-  pkgrel=17
+  pkgrel=26
   depends=()
   groups=()
   cd $srcdir/tmp-ndis-utils
   mv -v usr "$pkgdir"
 }
-
-# vim:set ts=2 sw=2 et:

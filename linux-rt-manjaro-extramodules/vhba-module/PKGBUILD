@@ -3,22 +3,22 @@
 # Mateusz Herych <heniekk@gmail.com>
 # Charles Lindsay <charles@chaoslizard.org>
 
-# Maintainer: Guinux <nuxgui@gmail.com>
-# Co-Maintainer: Clittle <philm@manjarolinux.org>
+# Maintainer: Philip Müller <philm[at]manjaro[dot]org>
+# Maintainer: Bernhard Landauer <oberon@manjaro.org>
 
-pkgname=linux-rt-manjaro-vhba-module
+pkgname=linux-rt-lts-manjaro-vhba-module
 _pkgname=vhba-module
 pkgver=20140629
-_extramodules=extramodules-4.4-rt-MANJARO
-pkgrel=17
+_extramodules=extramodules-4.4-rt-lts-MANJARO
+pkgrel=2
 pkgdesc="Kernel module that emulates SCSI devices"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://cdemu.sourceforge.net/"
 license=('GPL')
-depends=('linux-rt-manjaro')
-makedepends=('linux-rt-manjaro-headers')
+depends=('linux-rt-lts-manjaro')
+makedepends=('linux-rt-lts-manjaro-headers')
 provides=("$_pkgname=$pkgver")
-groups=('linux-rt-manjaro-extramodules')
+groups=('linux-rt-lts-manjaro-extramodules')
 install=$_pkgname.install
 source=("http://downloads.sourceforge.net/cdemu/$_pkgname-$pkgver.tar.bz2"
         '60-vhba.rules')
@@ -45,10 +45,8 @@ package() {
   sed -i "s/EXTRAMODULES=.*/EXTRAMODULES=$_extramodules/" \
     "$startdir/vhba-module.install"
 
-	find "$pkgdir" -name '*.ko' -exec gzip -9 {} \;
+  find "$pkgdir" -name '*.ko' -exec gzip -9 {} \;
 
   install -Dm644 "$srcdir/60-vhba.rules" \
-	  "$pkgdir/usr/lib/udev/rules.d/60-linux-rt-manjaro-vhba.rules"
+    "$pkgdir/usr/lib/udev/rules.d/60-linux-rt-lts-manjaro-vhba.rules"
 }
-
-# vim:set ts=2 sw=2 et:

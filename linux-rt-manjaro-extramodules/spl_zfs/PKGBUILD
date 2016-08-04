@@ -1,15 +1,15 @@
-# Maintainer: Jesus Alvarez <jeezusjr at gmail dot com>
-# Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
+# Maintainer: Philip Müller <philm[at]manjaro[dot]org>
+# Maintainer: Bernhard Landauer <oberon@manjaro.org>
 
-_linuxprefix=linux-rt-manjaro
-_extramodules=extramodules-4.4-rt-MANJARO
+_linuxprefix=linux-rt-lts-manjaro
+_extramodules=extramodules-4.4-rt-lts-MANJARO
 _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
 pkgbase=$_linuxprefix-spl_zfs
 pkgname=("$_linuxprefix-spl" "$_linuxprefix-zfs")
 pkgver=0.6.5.7
-pkgrel=7
+pkgrel=2
 url="http://zfsonlinux.org/"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=("CDDL")
 depends=("$_linuxprefix" "kmod")
 makedepends=("$_linuxprefix-headers")
@@ -39,7 +39,7 @@ build() {
   make
 }
 
-package_linux-rt-manjaro-spl(){
+package_linux-rt-lts-manjaro-spl(){
   _pkgname=spl
   pkgdesc='Solaris Porting Layer kernel modules.'
   provides=("$_pkgname=$pkgver")
@@ -52,7 +52,7 @@ package_linux-rt-manjaro-spl(){
   sed -i -e "s/EXTRAMODULES='.*'/EXTRAMODULES='$_extramodules'/" "$startdir/install"
 }
 
-package_linux-rt-manjaro-zfs(){
+package_linux-rt-lts-manjaro-zfs(){
   _pkgname=zfs
   pkgdesc='Kernel modules for the Zettabyte File System.'
   provides=("$_pkgname=$pkgver")
